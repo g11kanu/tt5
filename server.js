@@ -5,6 +5,7 @@ var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 var CONTACTS_COLLECTION = "contacts";
+var DEVICES_COLLECTION = "devices";
 
 var app = express();
 app.use(express.static(__dirname + "/public"));
@@ -54,6 +55,16 @@ app.get("/contacts", function(req, res) {
   });
 });
 
+app.get("/devices", function(req, res) {
+  db.collection(DEVICES_COLLECTION).find({}).toArray(function(err, docs) {
+    if (err) {
+      handleError(res, err.message, "Failed to get contacts.");
+    } else {
+      res.status(200).json(docs);
+    }
+  });
+});
+
 app.post("/contacts", function(req, res) {
   var newContact = req.body;
   newContact.createDate = new Date();
@@ -65,6 +76,25 @@ app.post("/contacts", function(req, res) {
   db.collection(CONTACTS_COLLECTION).insertOne(newContact, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to create new contact.");
+    } else {
+      res.status(201).json(doc.ops[0]);
+    }
+  });
+});
+
+
+app.post("/devices", function(req, res) {
+  var newDevice = req.body;
+  //newDevice.Name;
+  //newDevice.registrationId = newDevice.registrationId;
+
+  if (!(req.body.registrationId)) {
+    handleError(res, "Invalid registration input", "Must provide a valid number.", 400);
+  }
+
+  db.collection(DEVICES_COLLECTION).insertOne(newDevice, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to create new devices.");
     } else {
       res.status(201).json(doc.ops[0]);
     }
