@@ -22,6 +22,22 @@ angular.module("contactsApp", ['ngRoute'])
                 redirectTo: "/"
             })
     })
+    .service("Device", function($http) {
+        this.getDevices = function () {
+            return $http.get("/devices").then(function (response) {
+                return response;
+            }, function (response) {
+                alert("Error finding contacts.");
+            });
+        }
+        this.createDevice = function (device) {
+            return $http.post("/devices", device).then(function (response) {
+                return response;
+            }, function (response) {
+                alert("Error creating contact.");
+            });
+        }
+    })
     .service("Contacts", function($http) {
         this.getContacts = function() {
             return $http.get("/contacts").
