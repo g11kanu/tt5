@@ -96,9 +96,9 @@ app.post("/devices", function(req, res) {
   //newDevice.Name;
   //newDevice.registrationId = newDevice.registrationId;
 
-  //if (!(req.body.registrationId)) {
-  //  handleError(res, "Invalid registration input", "Must provide a valid number.", 400);
-  //}
+  if (!(req.body.registrationId)) {
+    handleError(res, "Invalid registration input", "Must provide a valid number.", 400);
+  }
 
   db.collection(DEVICES_COLLECTION).insertOne(newDevice, function(err, doc) {
     if (err) {
