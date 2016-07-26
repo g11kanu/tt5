@@ -97,12 +97,12 @@ app.post("/devices", function(req, res) {
   //newDevice.registrationId = newDevice.registrationId;
 
   if (!(req.body.registrationId)) {
-    handleError(res, "Invalid registration input", "Must provide a valid number." + req.body.toString(), 400);
-  }
+    handleError(res, "Invalid registration input", "Must provide a valid number." + JSON.stringify(req.body), 400);
+}
 
-  db.collection(DEVICES_COLLECTION).insertOne(newDevice, function(err, doc) {
+db.collection(DEVICES_COLLECTION).insertOne(newDevice, function(err, doc) {
     if (err) {
-      handleError(res, err.message, "Failed to create new devices.");
+        handleError(res, err.message, "Failed to create new devices.");
     } else {
       res.status(201).json(doc.ops[0]);
     }
