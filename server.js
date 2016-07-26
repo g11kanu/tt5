@@ -1,5 +1,5 @@
 var express = require("express");
-//var cors = require("cors");
+var cors = require("cors");
 var path = require("path");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
@@ -8,8 +8,15 @@ var ObjectID = mongodb.ObjectID;
 var CONTACTS_COLLECTION = "contacts";
 var DEVICES_COLLECTION = "devices";
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+}
+
 var app = express();
-//app.use(cors())
+app.use(allowCrossDomain);
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
