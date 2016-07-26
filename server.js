@@ -1,4 +1,5 @@
 var express = require("express");
+var cors = require('cors');
 var path = require("path");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
@@ -8,6 +9,7 @@ var CONTACTS_COLLECTION = "contacts";
 var DEVICES_COLLECTION = "devices";
 
 var app = express();
+app.use(cors())
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
