@@ -1,5 +1,5 @@
 {
-  "name": "MEAN",
+  "name": "tt5",
   "version": "1.0.0",
   "description": "Tu turno online",
   "main": "server.js",
@@ -10,6 +10,18 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
-    "mongodb": "^2.1.6"
-  }
+    "mongodb": "^2.1.6",
+    "node-gcm": "^0.14.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/g11kanu/tt5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/g11kanu/tt5/issues"
+  },
+  "homepage": "https://github.com/g11kanu/tt5#readme"
 }

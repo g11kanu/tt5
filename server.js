@@ -1,8 +1,8 @@
 var express = require("express");
-//var cors = require("cors");
 var path = require("path");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
+var gcm = require('node-gcm');
 var ObjectID = mongodb.ObjectID;
 
 var CONTACTS_COLLECTION = "contacts";
@@ -91,24 +91,6 @@ app.post("/contacts", function(req, res) {
 });
 
 
-app.post("/devices", function(req, res) {
-  var newDevice = req.body;
-  //newDevice.Name;
-  //newDevice.registrationId = newDevice.registrationId;
-
-  if (!(req.body.registrationId)) {
-    handleError(res, "Invalid registration input", "Must provide a valid number." + JSON.stringify(req.body), 400);    
-}
-
-db.collection(DEVICES_COLLECTION).insertOne(newDevice, function(err, doc) {
-    if (err) {
-        handleError(res, err.message, "Failed to create new devices.");
-    } else {
-      res.status(201).json(doc.ops[0]);
-    }
-  });
-});
-
 /*  "/contacts/:id"
  *    GET: find contact by id
  *    PUT: update contact by id
@@ -124,6 +106,8 @@ app.get("/contacts/:id", function(req, res) {
     }
   });
 });
+
+
 
 app.put("/contacts/:id", function(req, res) {
   var updateDoc = req.body;
@@ -146,4 +130,115 @@ app.delete("/contacts/:id", function(req, res) {
       res.status(204).end();
     }
   });
+});
+
+///////////////////////////////////////////////////////////////////////////
+//Devices
+
+app.get("/devices/:id", function(req, res) {
+    db.collection(DEVICES_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get device");
+        } else {
+            res.status(200).json(doc);
+        }
+    });
+});
+
+
+app.post("/devices", function(req, res) {
+    var newDevice = req.body;
+    //newDevice.Name;
+    //newDevice.registrationId = newDevice.registrationId;
+
+    if (!(req.body.registrationId)) {
+        handleError(res, "Invalid registration input", "Must provide a valid number." + JSON.stringify(req.body), 400)
+    }
+
+    db.collection(DEVICES_COLLECTION).insertOne(newDevice, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to create new devices.");
+        } else {
+            res.status(201).json(doc.ops[0]);
+        }
+    });
+});
+
+
+///////////////////////////////////////////////////////////////////////////
+//Notification
+
+app.get("/notification/:id", function(req, res) {
+    db.collection(DEVICES_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to get device");
+        } else {
+
+            var device = doc;
+
+
+
+            var message = new gcm.Message({
+                collapseKey: 'demo',
+                priority: 'high',
+                contentAvailable: true,
+                delayWhileIdle: true,
+                timeToLive: 3,
+                //restrictedPackageName: "somePackageName",
+                dryRun: false,
+                data: {
+                    key1: 'message1',
+                    key2: 'message2'
+                },
+                notification: {
+                    title: "Rata del orto!",
+                    icon: "ic_launcher",
+                    body: "\u270C Arranco la fiesta!."
+                }
+            });
+
+            //message.addData({
+            //    key1: 'message1',
+            //    key2: 'message2'
+
+            var sender = new gcm.Sender("AIzaSyDbEwejVFjX3HGVt_aTeGOyRdSUspIqvYU");
+            var registrationTokens = [];
+            registrationTokens.push(device.registrationId);
+
+            sender.send(message,  registrationTokens, 4, function (err, response) {
+            //sender.sendNoRetry(message, {registrationTokens: registrationTokens}, function (err, response) {
+                if (err)
+                {console.log(err);res.status(200).json(err);}
+                else  {console.log(response);  res.status(200).json(response);}
+            });
+            /*
+
+            var sender = new gcm.Sender("AIzaSyDbEwejVFjX3HGVt_aTeGOyRdSUspIqvYU");
+            var message = new gcm.Message();
+            message.addData('key1','testdarinodegcm');
+            message.delay_while_idle = 1;
+            var registrationIds = [];
+            registrationIds.push(device.registrationId);
+            sender.send(message, registrationIds, 4, function (err, result) {
+                console.log(err);
+                console.log(result);
+                if (err) res.status(200).json(err);
+                else    res.status(200).json(result);
+            })
+             */
+            /*
+            sender.send(message, { registrationTokens: registrationTokens }, function (err, response) {
+                if (err) res.status(200).json(err);
+                else    res.status(200).json(device.registrationId);
+            });
+ */
+            //res.status(200).json(device.registrationId);
+             /*
+            //sender.send(message, { registrationTokens: registrationTokens }, 10, function (err, response) {
+            //   if(err) console.error(err);
+            //    else    console.log(response);
+*/
+            //res.status(200).json(device);
+        }
+    });
 });

@@ -7,6 +7,9 @@ angular.module("contactsApp", ['ngRoute'])
                 resolve: {
                     contacts: function(Contacts) {
                         return Contacts.getContacts();
+                    },
+                    devices: function(Devices) {
+                        return Devices.getDevices();
                     }
                 }
             })
@@ -22,19 +25,41 @@ angular.module("contactsApp", ['ngRoute'])
                 redirectTo: "/"
             })
     })
-    .service("Device", function($http) {
+    .service("Notifications", function($http){
+        this.sendNotification = function(deviceId){
+            var url = "/notification/" + deviceId;
+            return $http.get(url).
+            then(function(response) {
+                return response;
+            }, function(response) {
+                alert("Error sending notification." + response);
+            });
+
+        }
+    })
+    .service("Devices", function($http) {
         this.getDevices = function () {
             return $http.get("/devices").then(function (response) {
                 return response;
             }, function (response) {
-                alert("Error finding contacts.");
+                alert("Error finding devices.");
             });
         }
         this.createDevice = function (device) {
             return $http.post("/devices", device).then(function (response) {
                 return response;
             }, function (response) {
-                alert("Error creating contact.");
+                alert("Error creating device.");
+            });
+        }
+        this.getDevice = function(deviceId) {
+            console.log("aca");
+            var url = "/devices/" + deviceId;
+            console.log(url);
+            return $http.get(url).then(function(response) {
+                return response;
+            }, function(response) {
+                alert("Error finding this device.");
             });
         }
     })
@@ -86,8 +111,21 @@ angular.module("contactsApp", ['ngRoute'])
                 });
         }
     })
-    .controller("ListController", function(contacts, $scope) {
+
+
+
+    .controller("ListController", function(contacts, devices, $scope, Notifications) {
         $scope.contacts = contacts.data;
+        $scope.devices = devices.data;
+
+        $scope.sendMsg = function(id) {
+            console.log("send msg");
+            Notifications.sendNotification(id).then(function(doc) {
+                console.log(doc);
+            }, function(response) {
+                console.log(response);
+            });
+        }
     })
     .controller("NewContactController", function($scope, $location, Contacts) {
         $scope.back = function() {
