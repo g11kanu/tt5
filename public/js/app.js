@@ -119,8 +119,8 @@ angular.module("contactsApp", ['ngRoute'])
         $scope.devices = devices.data;
 
         $scope.sendMsg = function(id) {
-            console.log("send msg");
-            Notifications.sendNotification({id : id, textMessage : $scope.textMessage}).then(function(doc) {
+            console.log($scope);
+            Notifications.sendNotification({id : id, textMessage : $scope.textMessage.value}).then(function(doc) {
                 console.log(doc);
             }, function(response) {
                 console.log(response);

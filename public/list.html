@@ -13,7 +13,7 @@
   </div>
 </div>
 <div class="container">
-  <input type="text" width="50%" placeholder="Text..." id="textMsg" />
+  <input type="text" width="50%" placeholder="Text..." id="textMsg" ng-model="textMessage" />
   <table class="table table-hover">
     <tbody>
     <tr ng-repeat="device in devices | orderBy:'firstName'" style="cursor:pointer">

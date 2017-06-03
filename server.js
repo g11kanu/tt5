@@ -193,7 +193,7 @@ app.get("/notification/:id", function(req, res) {
                 notification: {
                     title: "\u270C Escucha:",
                     icon: "ic_launcher",
-                    body: req.textMessage
+                    body: req.params.textMessage
                 }
             });
 
