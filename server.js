@@ -191,9 +191,9 @@ app.get("/notification/:id", function(req, res) {
                     key2: 'message2'
                 },
                 notification: {
-                    title: "Rata del orto!",
+                    title: "\u270C Escucha:",
                     icon: "ic_launcher",
-                    body: "\u270C Arranco la fiesta!."
+                    body: req.textMessage
                 }
             });
 

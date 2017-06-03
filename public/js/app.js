@@ -120,7 +120,7 @@ angular.module("contactsApp", ['ngRoute'])
 
         $scope.sendMsg = function(id) {
             console.log("send msg");
-            Notifications.sendNotification(id).then(function(doc) {
+            Notifications.sendNotification({id : id, textMessage : $scope.textMessage}).then(function(doc) {
                 console.log(doc);
             }, function(response) {
                 console.log(response);
