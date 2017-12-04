@@ -26,8 +26,8 @@ angular.module("contactsApp", ['ngRoute'])
             })
     })
     .service("Notifications", function($http){
-        this.sendNotification = function(deviceId){
-            var url = "/notification/" + deviceId;
+        this.sendNotification = function(device, $scope){
+            var url = "/notification/" + device.id;             
             return $http.get(url).
             then(function(response) {
                 return response;
@@ -120,7 +120,10 @@ angular.module("contactsApp", ['ngRoute'])
 
         $scope.sendMsg = function(id) {
             console.log($scope);
-            Notifications.sendNotification({id : id, textMessage : $scope.textMessage.value}).then(function(doc) {
+            let messageToSend = "Hola!";
+            if(textMsg != null)
+                messageToSend = textMsg.value;
+            Notifications.sendNotification({id : id, textMessage : messageToSend}).then(function(doc) {
                 console.log(doc);
             }, function(response) {
                 console.log(response);

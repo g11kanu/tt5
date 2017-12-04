@@ -23,7 +23,8 @@ app.use(bodyParser.json());
 var db;
 
 // Connect to the database before starting the application server. 
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
+//mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {  
+mongodb.MongoClient.connect("mongodb://heroku_zsmwj0dq:hj03phhj0lgcur3aqm8bpqlq95@ds029715.mlab.com:29715/heroku_zsmwj0dq", function (err, database) {
   if (err) {
     console.log(err);
     process.exit(1);
@@ -191,7 +192,7 @@ app.get("/notification/:id", function(req, res) {
                     key2: 'message2'
                 },
                 notification: {
-                    title: "\u270C Escucha:",
+                    title: "\u270C Escucha:"+req.params.textMessage,
                     icon: "ic_launcher",
                     body: req.params.textMessage
                 }
